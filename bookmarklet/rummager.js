@@ -4,7 +4,7 @@ javascript:(function(){
       .insertAfter($('#itemFilter'));
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
       .insertAfter($('#notesFilter'));
-    $('<input type="checkbox" id="showUnsignedOnly">Show Unsigned/Unrequested<br/>')
+    $('<input type="checkbox" id="showUnsignedOnly">Hide Signed & Requested<br/>')
       .insertAfter($('.item-locator'));
 
     function matchesFilter(filterTextArray, value) {
