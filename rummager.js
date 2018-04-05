@@ -8,7 +8,6 @@ javascript:(function(){
       .insertAfter($('#itemFilter'));
     $('<input type="checkbox" id="showUnsignedOnly">Hide Signed & Requested<br/>')
       .insertAfter($('.item-locator'));
-
     $('<br/><button class="btn btn-primary" id="clearAll">Clear Filters</button>')
       .insertBefore($('table'));
 
@@ -52,7 +51,7 @@ javascript:(function(){
         var rowMatched = matchesFilter(itemFilterTextArray, item.name) &&
           matchesFilter(notesFilterTextArray, item.notes) &&
           matchesFilter(countryFilterTextArray, item.country) &&
-          (priceFilter === "" || itemPrice <= priceFilter);
+          (priceFilter === "" || item.price <= priceFilter);
 
         rowMatched ? $row.show() : $row.hide();
       });
