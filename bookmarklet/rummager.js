@@ -4,7 +4,8 @@ javascript:(function(){
       .insertAfter($('#itemFilter'));
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
       .insertAfter($('#notesFilter'));
-    $('<input type="checkbox" id="showUnsignedOnly">Show Unsigned/Unrequested<br/>').insertAfter($('.item-locator'));
+    $('<input type="checkbox" id="showUnsignedOnly">Show Unsigned/Unrequested<br/>')
+      .insertAfter($('.item-locator'));
 
     function matchesFilter(filterTextArray, value) {
       if(filterTextArray === null) { return true; }
@@ -27,7 +28,9 @@ javascript:(function(){
       var onlyUnsigned = $("#showUnsignedOnly").is(":checked");
       var $rows = (onlyAvailable) ? $(".item:not(.historic-item)") : $(".item");
       if (onlyUnsigned) {
-        $rows = $($rows.toArray().filter(item => $(item).find('.request-status').text().trim() === 'REQ'));
+        $rows = $(
+          $rows.toArray().filter(item => $(item).find('.request-status').text().trim() === 'REQ')
+        );
       }
 
       var itemFilterTextArray = itemFilterText.toLowerCase().split(" ");
@@ -38,7 +41,7 @@ javascript:(function(){
         var $row = $(row);
         var itemName = $row.find(".item-name").text().toLowerCase();
         var itemNotes = $row.find(".notes").text().toLowerCase();
-        var price = Number($($row.children()[2]).text().replace(/[^0-9]+/g,""));
+        var price = Number($($row.children()[2]).text().replace(/[^0-9\.]+/g,""));
         var rowMatched = true;
         rowMatched = matchesFilter(itemFilterTextArray, itemName) &&
           matchesFilter(notesFilterTextArray, itemNotes) &&
