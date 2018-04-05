@@ -4,6 +4,7 @@ javascript:(function(){
       .insertAfter($('#itemFilter'));
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
       .insertAfter($('#notesFilter'));
+    $('<input type="checkbox" id="showUnsignedOnly">Show Unsigned/Unrequested<br/>').insertAfter($('.item-locator'))
 
     function matchesFilter(filterTextArray, value) {
       if(filterTextArray === null) { return true; }
@@ -23,7 +24,11 @@ javascript:(function(){
       $(".item").hide();
 
       var onlyAvailable = $("#showAvailableOnly").is(":checked");
-      var $rows = (onlyAvailable) ? $(".item:not(.historic-item)") : $(".item");
+      var onlyUnsigned = $("#showUnsignedOnly").is(":checked");
+      var $rows = (onlyAvailable) ? $(".item:not(.historic-item)") : $(".item")
+      if (onlyUnsigned) {
+        $rows = $($rows.toArray().filter(item => $(item).find('.request-status').text().trim() === 'REQ'));
+      }
 
       var itemFilterTextArray = itemFilterText.toLowerCase().split(" ");
       var notesFilterTextArray = notesFilterText.toLowerCase().split(" ");
@@ -45,6 +50,7 @@ javascript:(function(){
       $("#count").html($(".item:visible").length);
     }
 
+    $("#showUnsignedOnly").change(handleFilter);
     $("#notesFilter").keyup(handleFilter);
     $("#priceFilter").keyup(handleFilter);
     $("#itemFilter").keyup(handleFilter);
