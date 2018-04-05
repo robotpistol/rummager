@@ -4,7 +4,7 @@ javascript:(function(){
       .insertAfter($('#itemFilter'));
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
       .insertAfter($('#notesFilter'));
-    $('<input type="checkbox" id="showUnsignedOnly">Show Unsigned/Unrequested<br/>').insertAfter($('.item-locator'))
+    $('<input type="checkbox" id="showUnsignedOnly">Show Unsigned/Unrequested<br/>').insertAfter($('.item-locator'));
 
     function matchesFilter(filterTextArray, value) {
       if(filterTextArray === null) { return true; }
@@ -25,7 +25,7 @@ javascript:(function(){
 
       var onlyAvailable = $("#showAvailableOnly").is(":checked");
       var onlyUnsigned = $("#showUnsignedOnly").is(":checked");
-      var $rows = (onlyAvailable) ? $(".item:not(.historic-item)") : $(".item")
+      var $rows = (onlyAvailable) ? $(".item:not(.historic-item)") : $(".item");
       if (onlyUnsigned) {
         $rows = $($rows.toArray().filter(item => $(item).find('.request-status').text().trim() === 'REQ'));
       }
