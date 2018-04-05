@@ -45,7 +45,7 @@ javascript:(function(){
         var rowMatched = true;
         rowMatched = matchesFilter(itemFilterTextArray, itemName) &&
           matchesFilter(notesFilterTextArray, itemNotes) &&
-          (priceFilter === "" || price < priceFilter);
+          (priceFilter === "" || price <= priceFilter);
 
         rowMatched ? $row.show() : $row.hide();
       });
