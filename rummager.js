@@ -1,4 +1,4 @@
-javascript:(function(){
+function overlayRummager() {
   if($('#notesFilter').length == 0 && $('#itemFilter').length != 0) {
     $('#itemFilter').attr({ placeholder: 'Search Name' });
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
@@ -73,4 +73,5 @@ javascript:(function(){
     $("#priceFilter").keyup(handleFilter);
     $("#itemFilter").keyup(handleFilter);
   }
-})();
+};
+overlayRummager();
