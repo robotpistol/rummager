@@ -1,5 +1,6 @@
 javascript:(function(){
   if($('#notesFilter').length == 0 && $('#itemFilter').length != 0) {
+    $('#itemFilter').attr({ placeholder: 'Search Name' });
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
       .insertAfter($('#itemFilter'));
     $('<input type="text" class="form-control" id="notesFilter" placeholder="Search Notes">')
@@ -12,12 +13,10 @@ javascript:(function(){
       .insertBefore($('table'));
 
     function matchesFilter(filterTextArray, value) {
-      for(var i = 0; i < filterTextArray.length; i++) {
-        if(value.indexOf(filterTextArray[i]) === -1) {
-          return false;
-        }
-      }
-      return true;
+      return filterTextArray.reduce(function(isMatched, filter) {
+        if(!isMatched) { return false; }
+        return filter.startsWith("^") ? !value.includes(filter.substr(1)) : value.includes(filter);
+      }, true);
     }
 
     function handleFilter() {
