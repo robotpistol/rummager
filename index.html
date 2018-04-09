@@ -1,8 +1,61 @@
 <html>
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    <script src="index.js"></script>
+  </head>
   <body>
-    Drag and drop this to your bookmarks
-    <a href="javascript:(function(d,u,s){s=d.createElement('script');s.type='text/javascript';s.charset='utf-8';s.src=u;d.body.appendChild(s)})(document,'https://robotpistol.github.io/rummager/rummager.js')">
-      Rummager
-    </a>
+    <div class="container">
+      <div class="row">
+        <h1>Installing on Desktop</h1>
+      </div>
+      <div class="row">
+        <ol>
+          <li>
+            Drag and drop this to your bookmarks bar
+            <a class="btn btn-primary" href="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://robotpistol.github.io/rummager/rummager.js';})();">
+              Rummager
+            </a>
+          </li>
+        </ol>
+      </div>
+      <div class="row">
+        <h1>Installing on mobile</h1>
+      </div>
+      </p>
+      <ol>
+        <li>Press copy button</li>
+        <div class="row">
+          <div class="input-group col-sm-6">
+            <div class="input-group-prepend">
+              <button id="copy-button" class="btn btn-primary" type="button" onclick="copySnippet()">Copy</button>
+            </div>
+            <input type="textarea" id="code-snippet" class="form-control" value="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://robotpistol.github.io/rummager/rummager.js';})();">
+          </div>
+          <div class="alert alert-success collapse" role="alert" id="copy-alert">
+            Copied to Clipboard!
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        </div>
+        <li>Create a bookmark and paste the the copied text in as the URL</li>
+      </ol>
+      <div class="row">
+        <h1>Usage</h1>
+      </div>
+      <div class="row">
+        <ol>
+          <li>Go to <a href="http://bevager.com/brg/home?rewardsGroupName=rumbustion">bevager</a></li>
+          <li>Click on the address bar</li>
+          <li>Type in the name of your bookmark, "Rummager" if you drag and droppped it</li>
+          <li>Enjoy all the new search items</li>
+        </ol>
+      </div>
+    </div>
   </body>
 </html>
