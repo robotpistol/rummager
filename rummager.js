@@ -1,5 +1,5 @@
 function overlayRummager() {
-  if($('#notesFilter').length == 0 && $('#itemFilter').length != 0) {
+  if ($('#notesFilter').length === 0 && $('#itemFilter').length !== 0) {
     $('#itemFilter').attr({ placeholder: 'Search Name' });
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
       .insertAfter($('#itemFilter'));
@@ -14,64 +14,65 @@ function overlayRummager() {
 
     function matchesFilter(filterTextArray, value) {
       return filterTextArray.reduce(function(isMatched, filter) {
-        if(!isMatched) { return false; }
-        return filter.startsWith("^") ? !value.includes(filter.substr(1)) : value.includes(filter);
+        if (!isMatched) { return false; }
+        return filter.startsWith('^') ? !value.includes(filter.substr(1)) : value.includes(filter);
       }, true);
     }
 
     function handleFilter() {
-      var filterText = $(this).val();
+      $('.item').hide();
 
-      $(".item").hide();
-
-      var onlyAvailable = $("#showAvailableOnly").is(":checked");
-      var onlyUnsigned = $("#showUnsignedOnly").is(":checked");
-      var $rows = (onlyAvailable) ? $(".item:not(.historic-item)") : $(".item");
+      const onlyAvailable = $('#showAvailableOnly').is(':checked');
+      const onlyUnsigned = $('#showUnsignedOnly').is(':checked');
+      let $rows = (onlyAvailable) ? $('.item:not(.historic-item)') : $('.item');
 
       if (onlyUnsigned) {
-        $rows = $(
-          $rows.toArray().filter(item => $(item).find('.request-status').text().trim() === 'REQ')
-        );
+        $rows = $($rows.toArray().filter(function(item) {
+          $(item).find('.request-status').text().trim() === 'REQ')
+        });
       }
 
-      var itemFilterTextArray = $("#itemFilter").val().toLowerCase().trim().split(" ");
-      var notesFilterTextArray = $("#notesFilter").val().toLowerCase().trim().split(" ");
-      var countryFilterTextArray = $("#countryFilter").val().toLowerCase().trim().split(" ");
-      var priceFilter = $("#priceFilter").val();
+      const itemFilterTextArray = $('#itemFilter').val().toLowerCase().trim()
+        .split(' ');
+      const notesFilterTextArray = $('#notesFilter').val().toLowerCase().trim()
+        .split(' ');
+      const countryFilterTextArray = $('#countryFilter').val().toLowerCase().trim()
+        .split(' ');
+      const priceFilter = $('#priceFilter').val();
 
-      $rows.each(function(index, row){
-        var $row = $(row);
-        item = {
-          name: $row.find(".item-name").text().toLowerCase(),
-          notes: $row.find(".notes").text().toLowerCase(),
-          price: Number($($row.children()[2]).text().replace(/[^0-9\.]+/g,"")),
+      $rows.each(function(index, row) {
+        const $row = $(row);
+        const item = {
+          name: $row.find('.item-name').text().toLowerCase(),
+          notes: $row.find('.notes').text().toLowerCase(),
+          price: Number($($row.children()[2]).text().replace(/[^0-9.]+/g, '')),
           country: $($row.children()[0]).text().toLowerCase(),
         };
-        var rowMatched = matchesFilter(itemFilterTextArray, item.name) &&
+        const rowMatched = matchesFilter(itemFilterTextArray, item.name) &&
           matchesFilter(notesFilterTextArray, item.notes) &&
           matchesFilter(countryFilterTextArray, item.country) &&
-          (priceFilter === "" || item.price <= priceFilter);
+          (priceFilter === '' || item.price <= priceFilter);
 
         rowMatched ? $row.show() : $row.hide();
       });
 
-      $("#count").html($(".item:visible").length);
+      $('#count').html($('.item:visible').length);
     }
 
     function clearAll() {
-      $("#itemFilter").val("");
-      $("#notesFilter").val("");
-      $("#countryFilter").val("");
-      $("#priceFilter").val("");
-      $("#itemFilter").keyup();
+      $('#itemFilter').val('');
+      $('#notesFilter').val('');
+      $('#countryFilter').val('');
+      $('#priceFilter').val('');
+      $('#itemFilter').keyup();
     }
 
-    $("#clearAll").click(clearAll);
-    $("#showUnsignedOnly").change(handleFilter);
-    $("#notesFilter").keyup(handleFilter);
-    $("#countryFilter").keyup(handleFilter);
-    $("#priceFilter").keyup(handleFilter);
-    $("#itemFilter").keyup(handleFilter);
+    $('#clearAll').click(clearAll);
+    $('#showUnsignedOnly').change(handleFilter);
+    $('#notesFilter').keyup(handleFilter);
+    $('#countryFilter').keyup(handleFilter);
+    $('#priceFilter').keyup(handleFilter);
+    $('#itemFilter').keyup(handleFilter);
   }
-};
+}
 overlayRummager();
