@@ -27,9 +27,7 @@ function overlayRummager() {
       let $rows = (onlyAvailable) ? $('.item:not(.historic-item)') : $('.item');
 
       if (onlyUnsigned) {
-        $rows = $($rows.toArray().filter((item) => {
-          $(item).find('.request-status').text().trim() === 'REQ';
-        }));
+        $rows = $($rows.toArray().filter(item => $(item).find('.request-status').text().trim() === 'REQ'));
       }
 
       const itemFilterTextArray = $('#itemFilter').val().toLowerCase().trim()
@@ -53,7 +51,11 @@ function overlayRummager() {
           matchesFilter(countryFilterTextArray, item.country) &&
           (priceFilter === '' || item.price <= priceFilter);
 
-        rowMatched ? $row.show() : $row.hide();
+        if (rowMatched) {
+          $row.show();
+        } else {
+          $row.hide();
+        }
       });
 
       $('#count').html($('.item:visible').length);
