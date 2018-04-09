@@ -11,6 +11,14 @@
   <body>
     <div class="container">
       <div class="row">
+        <div class="alert alert-success collapse" role="alert" id="copy-alert">
+          Copied to Clipboard!
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+      <div class="row">
         <h1>Installing on Desktop</h1>
       </div>
       <div class="row">
@@ -35,14 +43,6 @@
               <button id="copy-button" class="btn btn-primary" type="button" onclick="copySnippet()">Copy</button>
             </div>
             <input type="textarea" id="code-snippet" class="form-control" value="javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://robotpistol.github.io/rummager/rummager.js';})();">
-          </div>
-        </div>
-        <div class="row">
-          <div class="alert alert-success collapse" role="alert" id="copy-alert">
-            Copied to Clipboard!
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
           </div>
         </div>
         <li>Create a bookmark and paste the the copied text in the URL field.</li>
