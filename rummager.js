@@ -13,7 +13,7 @@ function overlayRummager() {
       .insertBefore($('table'));
 
     function matchesFilter(filterTextArray, value) {
-      return filterTextArray.reduce(function(isMatched, filter) {
+      return filterTextArray.reduce((isMatched, filter) => {
         if (!isMatched) { return false; }
         return filter.startsWith('^') ? !value.includes(filter.substr(1)) : value.includes(filter);
       }, true);
@@ -27,7 +27,7 @@ function overlayRummager() {
       let $rows = (onlyAvailable) ? $('.item:not(.historic-item)') : $('.item');
 
       if (onlyUnsigned) {
-        $rows = $($rows.toArray().filter(function(item) {
+        $rows = $($rows.toArray().filter((item) => {
           $(item).find('.request-status').text().trim() === 'REQ';
         }));
       }
@@ -40,7 +40,7 @@ function overlayRummager() {
         .split(' ');
       const priceFilter = $('#priceFilter').val();
 
-      $rows.each(function(index, row) {
+      $rows.each((index, row) => {
         const $row = $(row);
         const item = {
           name: $row.find('.item-name').text().toLowerCase(),
