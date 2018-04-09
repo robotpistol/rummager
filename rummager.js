@@ -28,7 +28,7 @@ function overlayRummager() {
 
       if (onlyUnsigned) {
         $rows = $($rows.toArray().filter(function(item) {
-          $(item).find('.request-status').text().trim() === 'REQ');
+          $(item).find('.request-status').text().trim() === 'REQ';
         });
       }
 
