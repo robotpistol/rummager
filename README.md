@@ -10,3 +10,5 @@ javascript:(function(){document.body.appendChild(document.createElement('script'
 2.  Sign into sc.bevager.com as normal
 3.  Open the newly created bookmark
 4.  Filter away!
+
+For a more complete page check [here](https://robotpistol.github.io/rummager/)
