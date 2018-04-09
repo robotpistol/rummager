@@ -29,7 +29,7 @@ function overlayRummager() {
       if (onlyUnsigned) {
         $rows = $($rows.toArray().filter(function(item) {
           $(item).find('.request-status').text().trim() === 'REQ';
-        });
+        }));
       }
 
       const itemFilterTextArray = $('#itemFilter').val().toLowerCase().trim()
