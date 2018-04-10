@@ -1,0 +1,65 @@
+body {
+  background-color: black;
+  color: #a88649;
+  box-shadow: 0s;
+  font-family: "arno-pro";
+}
+
+h1 {
+  font-family: TrajanPro-Bold;
+  color: #ffedc5;
+}
+
+h3 {
+  font-family: TrajanPro-Bold;
+  color: #ffedc5;
+}
+
+a {
+  color: #d3ba87;
+}
+
+a:hover {
+  color: #b74f09;
+}
+
+.form-control {
+  border: #e5ddb9;
+  box-shadow: 0s;
+}
+
+.form-control:hover {
+  border: #e5ddb9;
+  box-shadow: 0s;
+}
+
+.btn-outline-info {
+  border-color: #e5ddb9;
+  color: #e5ddb9;
+  box-shadow: 0s;
+}
+
+.btn-outline-info:hover {
+  border-color: #e5ddb9;
+  background-color: #e5ddb9;
+  color: black;
+  box-shadow: 0s;
+}
+
+.alert-success {
+  border-color: #e5ddb9;
+  background-color: #e5ddb9;
+  color: black;
+  box-shadow: 0s;
+   margin-top:10px;
+
+}
+
+#message {
+    position: fixed;
+    top: 0;
+    width: 50%;
+}
+#inner-message {
+    margin: 0 auto;
+}
