@@ -46,13 +46,18 @@ a:hover {
   box-shadow: 0s;
 }
 
+.alert{
+    display: none;
+}
+
 .alert-success {
   border-color: #e5ddb9;
   background-color: #e5ddb9;
   color: black;
-  box-shadow: 0s;
-  margin-top:10px;
-
+  position: fixed;
+  top: 5px;
+  left:2%;
+  width: 96%;
 }
 
 #message {

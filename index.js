@@ -6,7 +6,15 @@ function copySnippet() {
   document.execCommand("Copy");
 
   /* Alert the copied text */
-  $('#copy-alert').show();
+  showCopyAlert();
+}
+
+function showCopyAlert(){
+  $("#copy-alert").show();
+  setTimeout(function(){
+    $("#copy-alert").hide();
+  }, 2000);
 }
 
 $('#copy-button').on('click', copySnippet);
+
