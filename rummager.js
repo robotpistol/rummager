@@ -14,8 +14,8 @@ class Rummager {
     $('#itemFilter').keyup();
   }
 
-  static generateFilterArray(item) {
-    return item.val().toLowerCase().trim().split(' ');
+  static generateFilterArray(element) {
+    return element.val().toLowerCase().trim().split(' ');
   }
 
   static handleFilter() {
@@ -26,10 +26,8 @@ class Rummager {
     let $rows = (onlyAvailable) ? $('.item:not(.historic-item)') : $('.item');
 
     if (onlyUnsigned) {
-      $rows =
-        $($rows.toArray().filter(item => $(item).find('.request-status').text().trim() === 'REQ'));
+      $rows = $rows.filter((i, e) => $(e).find('.request-status').text().trim() === 'REQ');
     }
-
 
     const itemFilterTextArray = Rummager.generateFilterArray($('#itemFilter'));
     const notesFilterTextArray = Rummager.generateFilterArray($('#notesFilter'));
