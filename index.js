@@ -16,5 +16,14 @@ function copySnippet() {
   showCopyAlert();
 }
 
-$('#copy-button').on('click', copySnippet);
+// $('#copy-button').on('click', copySnippet);
 
+
+var clipboard = new ClipboardJS('.btn');
+
+clipboard.on('success', function(e) {
+  console.info('Action:', e.action);
+  console.info('Text:', e.text);
+  console.info('Trigger:', e.trigger);
+  showCopyAlert()
+});
