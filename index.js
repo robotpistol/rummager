@@ -16,9 +16,6 @@ function copySnippet() {
   showCopyAlert();
 }
 
-// $('#copy-button').on('click', copySnippet);
-
-
 var clipboard = new ClipboardJS('.btn');
 
 clipboard.on('success', function(e) {
