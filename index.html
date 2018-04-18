@@ -52,14 +52,15 @@
         </div>
       </div>
 
-      <br/>
-
-      <div class="accordion" id="accordion">
-        <div class="card">
-          <div class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-            <h5>Chrome</h5>
-          </div>
-          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="row" >
+        <div id="collapseDiv">
+          <a class="btn btn-outline-info " data-toggle="collapse" href="#collapseOne" role="button" aria-controls="collapseOne" data-parent="#collapseDiv">
+            <h5>Chrome Instructions</h5>
+          </a>
+          <a class="btn btn-outline-info" data-toggle="collapse" href="#collapseTwo" role="button" aria-controls="collapseTwo" data-parent="#collapseDiv">
+            <h5>Safari Instructions</h5>
+          </a>
+          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#collapseDiv">
             <div class="card-body">
               <ol>
                 <li>Copy the bookmarklet code above.</li>
@@ -72,12 +73,7 @@
               </ol>
             </div>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-            <h5>Safari</h5>
-          </div>
-          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#collapseDiv">
             <div class="card-body">
               <ol>
                 <li>Copy the bookmarklet code above.</li>
