@@ -15,11 +15,6 @@ h3 {
   color: #ffedc5;
 }
 
-h5 {
-  font-family: TrajanPro-Bold;
-  color: #ffedc5;
-}
-
 a {
   color: #d3ba87;
 }
@@ -52,7 +47,7 @@ a:hover {
 }
 
 .alert{
-  display: none;
+    display: none;
 }
 
 .alert-success {
@@ -72,15 +67,4 @@ a:hover {
 }
 #inner-message {
     margin: 0 auto;
-}
-
-.card {
-  background-color: black;
-  border-color: #e5ddb9;
-  width: 100%;
-}
-
-.card-header {
-  width: 100%;
-  border-color: #e5ddb9;
 }
