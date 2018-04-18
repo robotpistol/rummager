@@ -69,7 +69,7 @@ class Rummager {
       .insertAfter($('#itemFilter'));
     $('<input type="text" class="form-control" id="countryFilter" placeholder="Search Country">')
       .insertAfter($('#itemFilter'));
-    $('<input type="checkbox" id="showUnsignedOnly">Hide Signed & Requested<br/>')
+    $('<input type="checkbox" id="showUnsignedOnly" checked="checked">Hide Signed & Requested<br/>')
       .insertAfter($('.item-locator'));
     $('<br/><button class="btn btn-primary" id="clearFilters">Clear Filters</button>')
       .insertBefore($('table'));
@@ -80,6 +80,7 @@ class Rummager {
     $('#countryFilter').keyup(Rummager.handleFilter);
     $('#priceFilter').keyup(Rummager.handleFilter);
     $('#itemFilter').keyup(Rummager.handleFilter);
+    $('#itemFilter').keyup();
   }
 }
 
