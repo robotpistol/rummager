@@ -3,5 +3,6 @@ module.exports = {
   "globals": {
     "document": false,
     "$": false
-  }
+  },
+  "eslintIgnore": ["clipboard.min.js"]
 };
