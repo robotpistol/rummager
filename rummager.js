@@ -9,17 +9,17 @@ class Rummager {
   static generateCountryCount() {
     const countryCount = {};
     $('.item:visible').each((index, item) => {
-      country = $($(item).children()[0]).text().toLowerCase().trim();
+      const country = $($(item).children()[0]).text().toLowerCase().trim();
       if (countryCount[country] === undefined) {
         countryCount[country] = 0;
       }
-      countryCount[country]++;
+      countryCount[country] += 1;
     });
-    result = Object
+
+    return Object
       .keys(countryCount)
       .map(key => [key, countryCount[key]])
       .sort((a, b) => b[1] - a[1]);
-    return result;
   }
 
   static clearFilters() {
