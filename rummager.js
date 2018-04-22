@@ -25,7 +25,7 @@ class Rummager {
   static clearFilters() {
     $('#itemFilter').val('');
     $('#notesFilter').val('');
-    $('#countryFilter').val('');
+    $('#firstColumn').val('');
     $('#priceFilter').val('');
     $('#itemFilter').keyup();
   }
@@ -47,7 +47,7 @@ class Rummager {
 
     const itemFilterTextArray = Rummager.generateFilterArray($('#itemFilter'));
     const notesFilterTextArray = Rummager.generateFilterArray($('#notesFilter'));
-    const countryFilterTextArray = Rummager.generateFilterArray($('#countryFilter'));
+    const firstColumnTextArray = Rummager.generateFilterArray($('#firstColumn'));
     const priceFilter = $('#priceFilter').val();
 
     $rows.each((index, row) => {
@@ -61,7 +61,7 @@ class Rummager {
       const rowMatched =
         Rummager.matchesFilter(itemFilterTextArray, item.name) &&
         Rummager.matchesFilter(notesFilterTextArray, item.notes) &&
-        Rummager.matchesFilter(countryFilterTextArray, item.country) &&
+        Rummager.matchesFilter(firstColumnTextArray, item.country) &&
         (priceFilter === '' || item.price <= priceFilter);
 
       if (rowMatched) {
@@ -78,12 +78,13 @@ class Rummager {
     if ($('#notesFilter').length !== 0 || $('#itemFilter').length === 0) {
       return;
     }
+    let firstColumnLabel = 'Search ' + $($($('thead')[0]).find('th')[0]).text();
     $('#itemFilter').attr({ placeholder: 'Search Name' });
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
       .insertAfter($('#itemFilter'));
     $('<input type="text" class="form-control" id="notesFilter" placeholder="Search Notes">')
       .insertAfter($('#itemFilter'));
-    $('<input type="text" class="form-control" id="countryFilter" placeholder="Search Country">')
+    $('<input type="text" class="form-control" id="firstColumn" placeholder="' + firstColumnLabel + '">')
       .insertAfter($('#itemFilter'));
     $('<input type="checkbox" id="showUnsignedOnly" checked="checked">Hide Signed & Requested<br/>')
       .insertAfter($('.item-locator'));
@@ -93,7 +94,7 @@ class Rummager {
     $('#clearFilters').click(Rummager.clearFilters);
     $('#showUnsignedOnly').change(Rummager.handleFilter);
     $('#notesFilter').keyup(Rummager.handleFilter);
-    $('#countryFilter').keyup(Rummager.handleFilter);
+    $('#firstColumn').keyup(Rummager.handleFilter);
     $('#priceFilter').keyup(Rummager.handleFilter);
     $('#itemFilter').keyup(Rummager.handleFilter);
     $('#itemFilter').keyup();
