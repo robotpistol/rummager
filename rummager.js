@@ -9,16 +9,26 @@ class Rummager {
   static generateCountryCount() {
     const countryCount = {};
     $('.item:visible').each((index, item) => {
-      const country = $($(item).children()[0]).text().toLowerCase().trim();
+      const $item = $(item);
+      const country = $($item.children()[0]).text().toLowerCase().trim();
       if (countryCount[country] === undefined) {
-        countryCount[country] = 0;
+        countryCount[country] = { count: 0, minPrice: 1000, maxPrice: 0 };
       }
-      countryCount[country] += 1;
+      countryCount[country].count += 1;
+      countryCount[country].minPrice = Math.min(
+        countryCount[country].minPrice,
+        Rummager.parsePrice(item),
+      );
+
+      countryCount[country].maxPrice = Math.max(
+        countryCount[country].maxPrice,
+        Rummager.parsePrice(item),
+      );
     });
 
     return Object
       .keys(countryCount)
-      .map(key => [key, countryCount[key]])
+      .map(key => [key, countryCount[key].count, countryCount[key]])
       .sort((a, b) => b[1] - a[1]);
   }
 
@@ -28,6 +38,10 @@ class Rummager {
     $('#firstColumn').val('');
     $('#priceFilter').val('');
     $('#itemFilter').keyup();
+  }
+
+  static parsePrice(row) {
+    return Number($($(row).children()[2]).text().replace(/[^0-9.]+/g, ''));
   }
 
   static generateFilterArray(element) {
@@ -41,8 +55,10 @@ class Rummager {
     const onlyUnsigned = $('#showUnsignedOnly').is(':checked');
     let $rows = (onlyAvailable) ? $('.item:not(.historic-item)') : $('.item');
 
+    const $requestedRows = $rows.filter((i, e) => $(e).find('.request-status').text().trim() === 'REQ');
+    const $unrequestedRows = $rows.filter((i, e) => $(e).find('.request-status').text().trim() !== 'REQ');
     if (onlyUnsigned) {
-      $rows = $rows.filter((i, e) => $(e).find('.request-status').text().trim() === 'REQ');
+      $rows = $requestedRows;
     }
 
     const itemFilterTextArray = Rummager.generateFilterArray($('#itemFilter'));
@@ -55,7 +71,7 @@ class Rummager {
       const item = {
         name: $row.find('.item-name').text().toLowerCase(),
         notes: $row.find('.notes').text().toLowerCase(),
-        price: Number($($row.children()[2]).text().replace(/[^0-9.]+/g, '')),
+        price: Rummager.parsePrice($row),
         country: $($row.children()[0]).text().toLowerCase(),
       };
       const rowMatched =
@@ -72,24 +88,31 @@ class Rummager {
     });
 
     $('#count').html($('.item:visible').length);
+    $('#unrequestedCount').html($unrequestedRows.filter(':visible').length);
+    $('#immortalCount').html($('.immortal-item:visible').length);
   }
 
   static overlayRummager() {
     if ($('#notesFilter').length !== 0 || $('#itemFilter').length === 0) {
       return;
     }
-    let firstColumnLabel = 'Search ' + $($($('thead')[0]).find('th')[0]).text();
+    const firstColumnName = $($($('thead')[0]).find('th')[0]).text();
+    const firstColumnLabel = `Search ${firstColumnName}`;
     $('#itemFilter').attr({ placeholder: 'Search Name' });
     $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit">')
       .insertAfter($('#itemFilter'));
     $('<input type="text" class="form-control" id="notesFilter" placeholder="Search Notes">')
       .insertAfter($('#itemFilter'));
-    $('<input type="text" class="form-control" id="firstColumn" placeholder="' + firstColumnLabel + '">')
+    $(`<input type="text" class="form-control" id="firstColumn" placeholder="${firstColumnLabel}">`)
       .insertAfter($('#itemFilter'));
+    $('<button class="btn btn-primary" id="clearFilters">Clear Filters</button>')
+      .insertAfter($('#priceFilter'));
     $('<input type="checkbox" id="showUnsignedOnly" checked="checked">Hide Signed & Requested<br/>')
       .insertAfter($('.item-locator'));
-    $('<br/><button class="btn btn-primary" id="clearFilters">Clear Filters</button>')
-      .insertBefore($('table'));
+    $('<div id="itemsFound"><span id="unrequestedCount">0</span> Unrequested Items</div>')
+      .insertAfter($('#itemsFound'));
+    $('<div id="itemsFound"><span id="immortalCount">0</span> Immortal Items</div>')
+      .insertAfter($('#itemsFound'));
 
     $('#clearFilters').click(Rummager.clearFilters);
     $('#showUnsignedOnly').change(Rummager.handleFilter);
