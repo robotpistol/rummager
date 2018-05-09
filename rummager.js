@@ -122,9 +122,9 @@ class Rummager {
     Rummager.deleteUnwrappedText($('#showAvailableOnly').parent());
     $('#showAvailableOnly').remove();
 
-    $('<label><input type="checkbox" id="showAvailableOnly" checked="checked">Show Available Only</label><br/>')
+    $('<div><label><input type="checkbox" id="showAvailableOnly" checked="checked">Show Available Only</label></div>')
       .insertAfter($('.item-locator'));
-    $('<label><input type="checkbox" id="showUnsignedOnly" checked="checked">Hide Signed & Requested</label><br/>')
+    $('<div><label><input type="checkbox" id="showUnsignedOnly" checked="checked">Hide Signed & Requested</label></div>')
       .insertAfter($('.item-locator'));
 
     $('<div id="itemsFound"><span id="requestedCount">0</span> Requested/Signed Items</div>')
