@@ -105,7 +105,7 @@ class Rummager {
       .insertAfter($('#itemFilter'));
     $(`<input type="text" class="form-control" id="firstColumn" placeholder="${firstColumnLabel}">`)
       .insertAfter($('#itemFilter'));
-    $('<button class="btn btn-primary" id="clearFilters">Clear Filters</button>')
+    $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 5px;">Clear Filters</button>')
       .insertAfter($('#priceFilter'));
     $('<input type="checkbox" id="showUnsignedOnly" checked="checked">Hide Signed & Requested<br/>')
       .insertAfter($('.item-locator'));
