@@ -139,7 +139,7 @@ class Rummager {
     $('#firstColumn').keyup(Rummager.handleFilter);
     $('#priceFilter').keyup(Rummager.handleFilter);
     $('#itemFilter').keyup(Rummager.handleFilter);
-    $('#itemFilter').keyup();
+    Rummager.handleFilter();
   }
 }
 
