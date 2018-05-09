@@ -110,13 +110,13 @@ class Rummager {
     const firstColumnName = $($($('thead')[0]).find('th')[0]).text();
     const firstColumnLabel = `Search ${firstColumnName}`;
     $('#itemFilter').attr({ placeholder: 'Search Name' });
-    $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit" style="margin-top: 5px;">')
+    $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit" style="margin-top: 3px;">')
       .insertAfter($('#itemFilter'));
-    $('<input type="text" class="form-control" id="notesFilter" placeholder="Search Notes" style="margin-top: 5px;">')
+    $('<input type="text" class="form-control" id="notesFilter" placeholder="Search Notes" style="margin-top: 3px;">')
       .insertAfter($('#itemFilter'));
-    $(`<input type="text" class="form-control" id="firstColumn" placeholder="${firstColumnLabel}" style="margin-top: 5px;">`)
+    $(`<input type="text" class="form-control" id="firstColumn" placeholder="${firstColumnLabel}" style="margin-top: 3px;">`)
       .insertAfter($('#itemFilter'));
-    $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 5px;">Clear Filters</button>')
+    $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 3px;">Clear Filters</button>')
       .insertAfter($('#priceFilter'));
 
     Rummager.deleteUnwrappedText($('#showAvailableOnly').parent());
