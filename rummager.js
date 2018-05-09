@@ -88,7 +88,7 @@ class Rummager {
     });
 
     $('#count').html($('.item:visible').length);
-    $('#unrequestedCount').html($unrequestedRows.filter(':visible').length);
+    $('#requestedCount').html($unrequestedRows.filter(':visible').length);
     $('#immortalCount').html($('.immortal-item:visible').length);
   }
 
@@ -109,7 +109,7 @@ class Rummager {
       .insertAfter($('#priceFilter'));
     $('<input type="checkbox" id="showUnsignedOnly" checked="checked">Hide Signed & Requested<br/>')
       .insertAfter($('.item-locator'));
-    $('<div id="itemsFound"><span id="unrequestedCount">0</span> Unrequested Items</div>')
+    $('<div id="itemsFound"><span id="requestedCount">0</span> Requested/Signed Items</div>')
       .insertAfter($('#itemsFound'));
     $('<div id="itemsFound"><span id="immortalCount">0</span> Immortal Items</div>')
       .insertAfter($('#itemsFound'));
