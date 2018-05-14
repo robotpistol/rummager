@@ -35,13 +35,13 @@ class Rummager {
   static clearFilters() {
     $('#itemFilter').val('');
     $('#notesFilter').val('');
-    $('#firstColumn').val('');
+    $('#countryFilter').val('');
     $('#priceFilter').val('');
     $('#itemFilter').keyup();
   }
 
   static parsePrice(row) {
-    return Number($($(row).children()[2]).text().replace(/[^0-9.]+/g, ''));
+    return Number($(row).find('.price').text().replace(/[^0-9.]+/g, ''));
   }
 
   static generateFilterArray(element) {
@@ -63,7 +63,7 @@ class Rummager {
 
     const itemFilterTextArray = Rummager.generateFilterArray($('#itemFilter'));
     const notesFilterTextArray = Rummager.generateFilterArray($('#notesFilter'));
-    const firstColumnTextArray = Rummager.generateFilterArray($('#firstColumn'));
+    const countryFilterTextArray = Rummager.generateFilterArray($('#countryFilter'));
     const priceFilter = $('#priceFilter').val();
 
     $rows.each((index, row) => {
@@ -72,12 +72,12 @@ class Rummager {
         name: $row.find('.item-name').text().toLowerCase(),
         notes: $row.find('.notes').text().toLowerCase(),
         price: Rummager.parsePrice($row),
-        country: $($row.children()[0]).text().toLowerCase(),
+        country: $row.find('.item-country').text().toLowerCase(),
       };
       const rowMatched =
         Rummager.matchesFilter(itemFilterTextArray, item.name) &&
         Rummager.matchesFilter(notesFilterTextArray, item.notes) &&
-        Rummager.matchesFilter(firstColumnTextArray, item.country) &&
+        Rummager.matchesFilter(countryFilterTextArray, item.country) &&
         (priceFilter === '' || item.price <= priceFilter);
 
       if (rowMatched) {
@@ -104,27 +104,21 @@ class Rummager {
   }
 
   static overlayRummager() {
-    if ($('#notesFilter').length !== 0 || $('#itemFilter').length === 0) {
+    if ($('#clearFilters').length !== 0 || $('#itemFilter').length === 0) {
       return;
     }
-    const firstColumnName = $($($('thead')[0]).find('th')[0]).text();
-    const firstColumnLabel = `Search ${firstColumnName}`;
-    $('#itemFilter').attr({ placeholder: 'Search Name' });
-    $('<input type="number" class="form-control" id="priceFilter" placeholder="Upper Price Limit" style="margin-top: 3px;">')
-      .insertAfter($('#itemFilter'));
-    $('<input type="text" class="form-control" id="notesFilter" placeholder="Search Notes" style="margin-top: 3px;">')
-      .insertAfter($('#itemFilter'));
-    $(`<input type="text" class="form-control" id="firstColumn" placeholder="${firstColumnLabel}" style="margin-top: 3px;">`)
-      .insertAfter($('#itemFilter'));
+    const countryFilterName = $($($('thead')[0]).find('th')[0]).text();
+    const countryFilterLabel = `Search ${countryFilterName}`;
     $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 3px;">Clear Filters</button>')
       .insertAfter($('#priceFilter'));
 
     Rummager.deleteUnwrappedText($('#showAvailableOnly').parent());
     $('#showAvailableOnly').remove();
+    $('#hideSignedRequested').remove();
 
     $('<div><label><input type="checkbox" id="showAvailableOnly" checked="checked">Show Available Only</label></div>')
       .insertAfter($('.item-locator'));
-    $('<div><label><input type="checkbox" id="showUnsignedOnly" checked="checked">Hide Signed & Requested</label></div>')
+    $('<div><label><input type="checkbox" id="hideSignedRequested" checked="checked">Hide Signed & Requested</label></div>')
       .insertAfter($('.item-locator'));
 
     $('<div id="itemsFound"><span id="requestedCount">0</span> Requested/Signed Items</div>')
@@ -134,9 +128,9 @@ class Rummager {
 
     $('#clearFilters').click(Rummager.clearFilters);
     $('#showAvailableOnly').change(Rummager.handleFilter);
-    $('#showUnsignedOnly').change(Rummager.handleFilter);
+    $('#hideSignedRequested').change(Rummager.handleFilter);
     $('#notesFilter').keyup(Rummager.handleFilter);
-    $('#firstColumn').keyup(Rummager.handleFilter);
+    $('#countryFilter').keyup(Rummager.handleFilter);
     $('#priceFilter').keyup(Rummager.handleFilter);
     $('#itemFilter').keyup(Rummager.handleFilter);
     Rummager.handleFilter();
