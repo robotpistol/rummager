@@ -51,15 +51,25 @@ class Rummager {
   static handleFilter() {
     $('.item').hide();
 
-    const onlyAvailable = $('#showAvailableOnly').is(':checked');
-    const onlyUnsigned = $('#showUnsignedOnly').is(':checked');
-    let $rows = (onlyAvailable) ? $('.item:not(.historic-item)') : $('.item');
-
-    const $requestedRows = $rows.filter((i, e) => $(e).find('.request-status').text().trim() === 'REQ');
-    const $unrequestedRows = $rows.filter((i, e) => $(e).find('.request-status').text().trim() !== 'REQ');
-    if (onlyUnsigned) {
-      $rows = $requestedRows;
+    const onlyAvailable = $("#showAvailableOnly").is(":checked");
+    const hideSignedRequested = $("#hideSignedRequested").is(":checked");
+    let $rows;
+    if (onlyAvailable) {
+      if (hideSignedRequested) {
+          $rows = $(".item:not(.historic-item):not([data-requested!=''])");
+      } else {
+          $rows = $(".item:not(.historic-item)");
+      }
+    } else {
+      if (hideSignedRequested) {
+          $rows = $(".item:not([data-requested!=''])");
+      } else {
+          $rows = $(".item");
+      }
     }
+
+    const $requestedRows = $rows.filter((i, e) => $(e).is("[data-requested!='']"));
+    const $unrequestedRows = $rows.filter((i, e) => $(e).is("[data-requested='']"));
 
     const itemFilterTextArray = Rummager.generateFilterArray($('#itemFilter'));
     const notesFilterTextArray = Rummager.generateFilterArray($('#notesFilter'));
@@ -87,9 +97,9 @@ class Rummager {
       }
     });
 
-    $('#count').html($('.item:visible').length);
-    $('#requestedCount').html($unrequestedRows.filter(':visible').length);
-    $('#immortalCount').html($('.immortal-item:visible').length);
+    $('#count').html($rows.length);
+    $('#requestedCount').html($requestedRows.length);
+    $('#immortalCount').html($($rows.find('.immortal-item')).length);
   }
 
   static deleteUnwrappedText(node) {
@@ -109,8 +119,6 @@ class Rummager {
     }
     const countryFilterName = $($($('thead')[0]).find('th')[0]).text();
     const countryFilterLabel = `Search ${countryFilterName}`;
-    $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 3px;">Clear Filters</button>')
-      .insertAfter($('#priceFilter'));
 
     Rummager.deleteUnwrappedText($('#showAvailableOnly').parent());
     $('#showAvailableOnly').remove();
@@ -119,6 +127,8 @@ class Rummager {
     $('<div><label><input type="checkbox" id="showAvailableOnly" checked="checked">Show Available Only</label></div>')
       .insertAfter($('.item-locator'));
     $('<div><label><input type="checkbox" id="hideSignedRequested" checked="checked">Hide Signed & Requested</label></div>')
+      .insertAfter($('.item-locator'));
+    $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 3px;">Clear Filters</button>')
       .insertAfter($('.item-locator'));
 
     $('<div id="itemsFound"><span id="requestedCount">0</span> Requested/Signed Items</div>')
