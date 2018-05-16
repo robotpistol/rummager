@@ -51,25 +51,19 @@ class Rummager {
   static handleFilter() {
     $('.item').hide();
 
-    const onlyAvailable = $("#showAvailableOnly").is(":checked");
-    const hideSignedRequested = $("#hideSignedRequested").is(":checked");
-    let $rows;
+    const onlyAvailable = $('#showAvailableOnly').is(':checked');
+    const hideSignedRequested = $('#hideSignedRequested').is(':checked');
+
+    let matchString = '.item';
     if (onlyAvailable) {
-      if (hideSignedRequested) {
-          $rows = $(".item:not(.historic-item):not([data-requested!=''])");
-      } else {
-          $rows = $(".item:not(.historic-item)");
-      }
-    } else {
-      if (hideSignedRequested) {
-          $rows = $(".item:not([data-requested!=''])");
-      } else {
-          $rows = $(".item");
-      }
+      matchString += ':not(.historic-item)';
     }
+    if (hideSignedRequested) {
+      matchString += ":not([data-requested!=''])";
+    }
+    const $rows = $(matchString);
 
     const $requestedRows = $rows.filter((i, e) => $(e).is("[data-requested!='']"));
-    const $unrequestedRows = $rows.filter((i, e) => $(e).is("[data-requested='']"));
 
     const itemFilterTextArray = Rummager.generateFilterArray($('#itemFilter'));
     const notesFilterTextArray = Rummager.generateFilterArray($('#notesFilter'));
@@ -117,8 +111,6 @@ class Rummager {
     if ($('#clearFilters').length !== 0 || $('#itemFilter').length === 0) {
       return;
     }
-    const countryFilterName = $($($('thead')[0]).find('th')[0]).text();
-    const countryFilterLabel = `Search ${countryFilterName}`;
 
     Rummager.deleteUnwrappedText($('#showAvailableOnly').parent());
     $('#showAvailableOnly').remove();
@@ -128,7 +120,7 @@ class Rummager {
       .insertAfter($('.item-locator'));
     $('<div><label><input type="checkbox" id="hideSignedRequested" checked="checked">Hide Signed & Requested</label></div>')
       .insertAfter($('.item-locator'));
-    $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 3px;">Clear Filters</button>')
+    $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 5px; margin-bottom: 10px">Clear Filters</button>')
       .insertAfter($('.item-locator'));
 
     $('<div id="itemsFound"><span id="requestedCount">0</span> Requested/Signed Items</div>')
