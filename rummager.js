@@ -9,9 +9,15 @@ class Rummager {
   static generateCountryCount() {
     const countryCount = {};
     $('.item:visible').each((index, item) => {
-      const country = $(item).find('.item-country').text().toLowerCase().trim();
+      const countryItem = $(item).find('.item-country');
+      const country = countryItem.text().toLowerCase().trim();
       if (countryCount[country] === undefined) {
-        countryCount[country] = { country: country, count: 0, minPrice: 1000, maxPrice: 0 };
+        countryCount[country] = {
+          country,
+          count: 0,
+          minPrice: 1000,
+          maxPrice: 0,
+        };
       }
       countryCount[country].count += 1;
       countryCount[country].minPrice = Math.min(
@@ -60,7 +66,6 @@ class Rummager {
       matchString += ":not([data-requested!=''])";
     }
     const $rows = $(matchString);
-
 
     const itemFilterTextArray = Rummager.generateFilterArray($('#itemFilter'));
     const notesFilterTextArray = Rummager.generateFilterArray($('#notesFilter'));
