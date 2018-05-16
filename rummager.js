@@ -9,10 +9,9 @@ class Rummager {
   static generateCountryCount() {
     const countryCount = {};
     $('.item:visible').each((index, item) => {
-      const $item = $(item);
-      const country = $($item.children()[0]).text().toLowerCase().trim();
+      const country = $(item).find('.item-country').text().toLowerCase().trim();
       if (countryCount[country] === undefined) {
-        countryCount[country] = { count: 0, minPrice: 1000, maxPrice: 0 };
+        countryCount[country] = { country: country, count: 0, minPrice: 1000, maxPrice: 0 };
       }
       countryCount[country].count += 1;
       countryCount[country].minPrice = Math.min(
@@ -27,9 +26,8 @@ class Rummager {
     });
 
     return Object
-      .keys(countryCount)
-      .map(key => [key, countryCount[key].count, countryCount[key]])
-      .sort((a, b) => b[1] - a[1]);
+      .values(countryCount)
+      .sort((a, b) => b.count - a.count);
   }
 
   static clearFilters() {
@@ -63,7 +61,6 @@ class Rummager {
     }
     const $rows = $(matchString);
 
-    const $requestedRows = $rows.filter((i, e) => $(e).is("[data-requested!='']"));
 
     const itemFilterTextArray = Rummager.generateFilterArray($('#itemFilter'));
     const notesFilterTextArray = Rummager.generateFilterArray($('#notesFilter'));
@@ -91,9 +88,11 @@ class Rummager {
       }
     });
 
-    $('#count').html($rows.length);
-    $('#requestedCount').html($requestedRows.length);
-    $('#immortalCount').html($($rows.find('.immortal-item')).length);
+    const $visibleRows = $('.item:visible');
+
+    $('#count').html($visibleRows.length);
+    $('#requestedCount').html($visibleRows.filter((i, e) => $(e).is("[data-requested!='']")).length);
+    $('#immortalCount').html($visibleRows.find('.immortal-item').length);
   }
 
   static deleteUnwrappedText(node) {
