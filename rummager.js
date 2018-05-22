@@ -1,3 +1,4 @@
+
 class Rummager {
   static matchesFilter(filterTextArray, value) {
     return filterTextArray.reduce((isMatched, filter) => {
@@ -6,34 +7,193 @@ class Rummager {
     }, true);
   }
 
+  static generateTabs() {
+    $(`
+      <div role="tabpanel">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+          <li role="presentation" class="active"><a href="#home" aria-controls="profile" role="tab" data-toggle="tab">Home</a></li>
+          <li role="presentation"><a href="#country-stats" aria-controls="profile" role="tab" data-toggle="tab">Country Stats</a></li>
+          <li role="presentation"><a href="#price-stats" aria-controls="messages" role="tab" data-toggle="tab">Price Stats</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div id="rummager-tabs" class="tab-content">
+        </div>
+      </div>
+    `).insertBefore($('#originalTable'));
+    Rummager.remakeHomeTab();
+    Rummager.addCountryCountTab();
+    Rummager.addPriceStatsTab();
+  }
+
+  static remakeHomeTab() {
+    $('#rummager-tabs').append(`
+      <div role="tabpanel" class="tab-pane active" id="home">
+        <table id="mainTable" class="table table-condensed sortable"">
+          <thead>
+            <tr>
+              <th style="width: 60px;">Country</th>
+              <th>Item Name</th>
+              <th>Price</th>
+              <th>Sign</th>
+              <th style="width: 40px;">Notes</th>
+              <th style="width: 100px;">DateSigned</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    `);
+
+    $('#itemsFound').each((index, item) => {
+      $('#home').prepend($(item));
+    });
+
+    $('#home').prepend($('.item-locator'));
+
+    $('.item').each((index, item) => {
+      $('#mainTable tbody').append(item);
+      const requestedAt = $(item).attr('data-requested');
+      const date = Rummager.parseDate(requestedAt);
+      $(item).append(`<td sorttable_customkey="${date}" style="word-wrap: break-word">${requestedAt}</td>`);
+    });
+    sorttable.makeSortable($('#mainTable')[0]);
+    $('#originalTable').remove();
+  }
+
+  static addCountryCountTab() {
+    if ($('#countryCountTable').length === 0) {
+      $('#rummager-tabs').append(`
+        <div role="tabpanel" class="tab-pane" id="country-stats">
+          <table id="countryCountTable" class="table table-condensed sortable"">
+            <thead>
+              <tr>
+                <th>Country</th>
+                <th class="sorttable_numeric">Total</th>
+                <th class="sorttable_numeric">Signed</th>
+                <th class="sorttable_numeric">Unsigned</th>
+                <th class="sorttable_numeric">minPrice</th>
+                <th class="sorttable_numeric">maxPrice</th>
+                <th class="sorttable_numeric">percentComplete</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      `);
+      Rummager.refreshTable();
+    }
+  }
+
+  static addPriceStatsTab() {
+    $('#rummager-tabs').append(`
+      <div role="tabpanel" class="tab-pane" id="price-stats">
+        <table id="priceStatsTable" class="table table-condensed sortable"">
+          <thead>
+            <tr>
+              <th class="sorttable_numeric">Price</th>
+              <th class="sorttable_numeric">Count</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    `);
+    $.each(Rummager.generatePriceCount(), (index, item) => {
+      $('#priceStatsTable tbody').append(`
+        <tr class="priceCountItem" data-requested style="display: table-row;">
+          <td>${item.price}</td>
+          <td>${item.count}</td>
+        </tr>
+      `);
+    });
+    sorttable.makeSortable($('#priceStatsTable')[0]);
+  }
+
+  static generatePriceCount() {
+    const priceCount = {};
+    $('.item').each((index, item) => {
+      const $item = $(item);
+      /* Ignore items that are no longer available and unrequested/signed */
+      if ($item.is('.historic-item') && $item.is("[data-requested='']")) {
+        return;
+      }
+      const price = Rummager.parsePrice(item);
+      const countryItem = $item.find('.item-country');
+      const country = countryItem.text().toLowerCase().trim();
+
+      if (priceCount[price] === undefined) {
+        priceCount[price] = {
+          price,
+          count: 0,
+          countries: new Set(),
+        };
+      }
+
+      priceCount[price].count += 1;
+      priceCount[price].countries.add(country);
+    });
+    return priceCount;
+  }
+
   static generateCountryCount() {
     const countryCount = {};
-    $('.item:visible').each((index, item) => {
-      const countryItem = $(item).find('.item-country');
+    $('.item').each((index, item) => {
+      const $item = $(item);
+      /* Ignore items that are no longer available and unrequested/signed */
+      if ($item.is('.historic-item') && $item.is("[data-requested='']")) {
+        return;
+      }
+
+      const countryItem = $item.find('.item-country');
       const country = countryItem.text().toLowerCase().trim();
+      const itemPrice = Rummager.parsePrice(item);
+
       if (countryCount[country] === undefined) {
         countryCount[country] = {
           country,
-          count: 0,
+          total: 0,
+          signed: 0,
+          unsigned: 0,
           minPrice: 1000,
           maxPrice: 0,
+          percentComplete: 0,
         };
       }
-      countryCount[country].count += 1;
-      countryCount[country].minPrice = Math.min(
-        countryCount[country].minPrice,
-        Rummager.parsePrice(item),
-      );
+      const countItem = countryCount[country];
 
-      countryCount[country].maxPrice = Math.max(
-        countryCount[country].maxPrice,
-        Rummager.parsePrice(item),
-      );
+      countItem.total += 1;
+      if ($item.is("[data-requested!='']")) {
+        countItem.signed += 1;
+      } else {
+        countItem.unsigned += 1;
+      }
+      countItem.minPrice = Math.min(countItem.minPrice, itemPrice);
+      countItem.maxPrice = Math.max(countItem.maxPrice, itemPrice);
+      countItem.percentComplete = Math.round((countItem.signed * 100.0) / countItem.total);
     });
-
     return Object
       .values(countryCount)
-      .sort((a, b) => b.count - a.count);
+      .sort((a, b) => b.total - a.total);
+  }
+
+  static refreshTable() {
+    $('#countryCountTable tbody tr').remove();
+    $.each(Rummager.generateCountryCount(), (index, item) => {
+      $('#countryCountTable tbody').append(`
+        <tr class="countItem" data-requested style="display: table-row;">
+          <td>${item.country}</td>
+          <td>${item.total}</td>
+          <td>${item.signed}</td>
+          <td>${item.unsigned}</td>
+          <td>${item.minPrice}</td>
+          <td>${item.maxPrice}</td>
+          <td>${item.percentComplete}</td>
+        </tr>
+      `);
+    });
+    sorttable.makeSortable($('#countryCountTable')[0]);
   }
 
   static clearFilters() {
@@ -50,6 +210,21 @@ class Rummager {
 
   static generateFilterArray(element) {
     return element.val().toLowerCase().trim().split(' ');
+  }
+
+  static addSignedOn() {
+    $('table thead tr').append('<th>Signed On</th>');
+    $('.item').each((index, row) => {
+      const requestedAt = $(row).attr('data-requested');
+      const date = Rummager.parseDate(requestedAt);
+      $(row).append(`<td sorttable_customkey="${date}" style="word-wrap: break-word">${requestedAt}</td>`);
+    });
+    sorttable.makeSortable($('table')[0]);
+  }
+
+  static parseDate(dateText) {
+    if (!dateText) { return ''; }
+    return Date.parse(dateText.replace(' at ', ' '));
   }
 
   static handleFilter() {
@@ -111,10 +286,22 @@ class Rummager {
     }
   }
 
+  static addTabs() {
+    $(`
+      <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#">Home</a></li>
+        <li role="presentation"><a href="#">Profile</a></li>
+        <li role="presentation"><a href="#">Messages</a></li>
+      </ul>
+    `).insertBefore($('table'));
+  }
+
   static overlayRummager() {
     if ($('#clearFilters').length !== 0 || $('#itemFilter').length === 0) {
       return;
     }
+    $('table').attr('id', 'originalTable');
+    Rummager.generateTabs();
 
     Rummager.deleteUnwrappedText($('#showAvailableOnly').parent());
     $('#showAvailableOnly').remove();
@@ -126,7 +313,6 @@ class Rummager {
       .insertAfter($('.item-locator'));
     $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 5px; margin-bottom: 10px">Clear Filters</button>')
       .insertAfter($('.item-locator'));
-
     $('<div id="itemsFound"><span id="requestedCount">0</span> Requested/Signed Items</div>')
       .insertAfter($('#itemsFound'));
     $('<div id="itemsFound"><span id="immortalCount">0</span> Immortal Items</div>')
@@ -139,6 +325,7 @@ class Rummager {
     $('#countryFilter').keyup(Rummager.handleFilter);
     $('#priceFilter').keyup(Rummager.handleFilter);
     $('#itemFilter').keyup(Rummager.handleFilter);
+
     Rummager.handleFilter();
   }
 }
