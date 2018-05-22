@@ -73,8 +73,6 @@ class Rummager {
                 <th class="sorttable_numeric">Total</th>
                 <th class="sorttable_numeric">Signed</th>
                 <th class="sorttable_numeric">Unsigned</th>
-                <th class="sorttable_numeric">minPrice</th>
-                <th class="sorttable_numeric">maxPrice</th>
                 <th class="sorttable_numeric">percentComplete</th>
               </tr>
             </thead>
@@ -187,8 +185,6 @@ class Rummager {
           <td>${item.total}</td>
           <td>${item.signed}</td>
           <td>${item.unsigned}</td>
-          <td>${item.minPrice}</td>
-          <td>${item.maxPrice}</td>
           <td>${item.percentComplete}</td>
         </tr>
       `);
