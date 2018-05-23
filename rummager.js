@@ -76,7 +76,7 @@ class Rummager {
                 <th class="sorttable_numeric">Total</th>
                 <th class="sorttable_numeric">Signed</th>
                 <th class="sorttable_numeric">Unsigned</th>
-                <th class="sorttable_numeric">% Complete</th>
+                <th class="sorttable_numeric">% Signed</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -96,6 +96,7 @@ class Rummager {
               <th class="sorttable_numeric">Price</th>
               <th class="sorttable_numeric">Count</th>
               <th class="sorttable_numeric">Signed</th>
+              <th class="sorttable_numeric">Unsigned</th>
               <th class="sorttable_numeric">% Signed</th>
             </tr>
           </thead>
@@ -109,6 +110,7 @@ class Rummager {
           <td>${item.price}</td>
           <td>${item.count}</td>
           <td>${item.signed}</td>
+          <td>${item.unsigned}</td>
           <td>${item.percentComplete}%</td>
         </tr>
       `);
@@ -141,6 +143,8 @@ class Rummager {
 
       if ($item.is("[data-requested!='']")) {
         countItem.signed += 1;
+      } else {
+        countItem.unsigned += 1;
       }
 
       countItem.count += 1;
