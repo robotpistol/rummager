@@ -73,7 +73,7 @@ class Rummager {
                 <th class="sorttable_numeric">Total</th>
                 <th class="sorttable_numeric">Signed</th>
                 <th class="sorttable_numeric">Unsigned</th>
-                <th class="sorttable_numeric">percentComplete</th>
+                <th class="sorttable_numeric">% Complete</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -185,7 +185,7 @@ class Rummager {
           <td>${item.total}</td>
           <td>${item.signed}</td>
           <td>${item.unsigned}</td>
-          <td>${item.percentComplete}</td>
+          <td>${item.percentComplete}%</td>
         </tr>
       `);
     });
