@@ -55,8 +55,9 @@ class Rummager {
     $('.item').each((index, item) => {
       $('#mainTable tbody').append(item);
       const requestedAt = $(item).attr('data-requested');
-      const msec = Rummager.parseDate(requestedAt);
-      const requestedAtFormatted = msec ? new Date(msec).toISOString().slice(0, 10) : '';
+      const date = Rummager.parseDate(requestedAt);
+      const msec = date ? date.valueOf() : '';
+      const requestedAtFormatted = date ? date.toLocaleDateString() : '';
 
       $(item).append(`<td sorttable_customkey="${msec}" style="word-wrap: break-word">${requestedAtFormatted}</td>`);
     });
@@ -223,8 +224,12 @@ class Rummager {
   }
 
   static parseDate(dateText) {
-    if (!dateText) { return ''; }
-    return Date.parse(dateText.replace(' at ', ' '));
+    if (!dateText) { return null; }
+    const date = new Date(dateText.replace(' at ', ' '));
+    if (date.getFullYear() === 2001) {
+      date.setYear(new Date().getFullYear());
+    }
+    return date;
   }
 
   static handleFilter() {
