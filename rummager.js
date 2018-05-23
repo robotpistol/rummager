@@ -69,7 +69,7 @@ class Rummager {
           <table id="countryCountTable" class="table table-condensed sortable"">
             <thead>
               <tr>
-                <th>Country</th>
+                <th style="width: 60px;">Country</th>
                 <th class="sorttable_numeric">Total</th>
                 <th class="sorttable_numeric">Signed</th>
                 <th class="sorttable_numeric">Unsigned</th>
