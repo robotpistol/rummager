@@ -55,8 +55,10 @@ class Rummager {
     $('.item').each((index, item) => {
       $('#mainTable tbody').append(item);
       const requestedAt = $(item).attr('data-requested');
-      const date = Rummager.parseDate(requestedAt);
-      $(item).append(`<td sorttable_customkey="${date}" style="word-wrap: break-word">${requestedAt}</td>`);
+      const msec = Rummager.parseDate(requestedAt);
+      const requestedAtFormatted = msec ? new Date(msec).toISOString().slice(0, 10) : '';
+
+      $(item).append(`<td sorttable_customkey="${msec}" style="word-wrap: break-word">${requestedAtFormatted}</td>`);
     });
     sorttable.makeSortable($('#mainTable')[0]);
     $('#originalTable').remove();
@@ -92,6 +94,8 @@ class Rummager {
             <tr>
               <th class="sorttable_numeric">Price</th>
               <th class="sorttable_numeric">Count</th>
+              <th class="sorttable_numeric">Signed</th>
+              <th class="sorttable_numeric">% Signed</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -103,6 +107,8 @@ class Rummager {
         <tr class="priceCountItem" data-requested style="display: table-row;">
           <td>${item.price}</td>
           <td>${item.count}</td>
+          <td>${item.signed}</td>
+          <td>${item.percentComplete}%</td>
         </tr>
       `);
     });
@@ -120,17 +126,25 @@ class Rummager {
       const price = Rummager.parsePrice(item);
       const countryItem = $item.find('.item-country');
       const country = countryItem.text().toLowerCase().trim();
-
       if (priceCount[price] === undefined) {
         priceCount[price] = {
           price,
           count: 0,
           countries: new Set(),
+          signed: 0,
+          unsigned: 0,
+          percentComplete: 0,
         };
       }
+      const countItem = priceCount[price];
 
-      priceCount[price].count += 1;
-      priceCount[price].countries.add(country);
+      if ($item.is("[data-requested!='']")) {
+        countItem.signed += 1;
+      }
+
+      countItem.count += 1;
+      countItem.countries.add(country);
+      countItem.percentComplete = Math.round((countItem.signed * 100.0) / countItem.count);
     });
     return priceCount;
   }
@@ -206,16 +220,6 @@ class Rummager {
 
   static generateFilterArray(element) {
     return element.val().toLowerCase().trim().split(' ');
-  }
-
-  static addSignedOn() {
-    $('table thead tr').append('<th>Signed On</th>');
-    $('.item').each((index, row) => {
-      const requestedAt = $(row).attr('data-requested');
-      const date = Rummager.parseDate(requestedAt);
-      $(row).append(`<td sorttable_customkey="${date}" style="word-wrap: break-word">${requestedAt}</td>`);
-    });
-    sorttable.makeSortable($('table')[0]);
   }
 
   static parseDate(dateText) {
