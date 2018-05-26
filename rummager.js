@@ -37,7 +37,7 @@ class Rummager {
               <th>Item Name</th>
               <th>Price</th>
               <th>Sign</th>
-              <th style="width: 40px;">Notes</th>
+              <th style="width: 40px;" class="sorttable_alpha">Notes</th>
               <th style="width: 100px;">DateSigned</th>
             </tr>
           </thead>
@@ -230,7 +230,8 @@ class Rummager {
   static parseDate(dateText) {
     if (!dateText) { return null; }
     const date = new Date(dateText.replace(' at ', ' '));
-    if (date.getFullYear() === 2001) {
+    const yearlessDate = new Date('Jan 1');
+    if (date.getFullYear() === yearlessDate.getFullYear()) {
       date.setYear(new Date().getFullYear());
     }
     return date;
