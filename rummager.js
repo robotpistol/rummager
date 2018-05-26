@@ -36,7 +36,7 @@ class Rummager {
               <th style="width: 60px;">Country</th>
               <th>Item Name</th>
               <th>Price</th>
-              <th style="width: 100px;">Sign</th>
+              <th style="width: 88px;">Sign</th>
               <th style="width: 40px;" class="sorttable_alpha">Notes</th>
             </tr>
           </thead>
