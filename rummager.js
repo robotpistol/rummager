@@ -36,9 +36,8 @@ class Rummager {
               <th style="width: 60px;">Country</th>
               <th>Item Name</th>
               <th>Price</th>
-              <th>Sign</th>
+              <th style="width: 1000px;">Sign</th>
               <th style="width: 40px;" class="sorttable_alpha">Notes</th>
-              <th style="width: 100px;">DateSigned</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -58,8 +57,9 @@ class Rummager {
       const date = Rummager.parseDate(requestedAt);
       const msec = date ? date.valueOf() : '';
       const requestedAtFormatted = date ? date.toLocaleDateString() : '';
-
-      $(item).append(`<td sorttable_customkey="${msec}" style="word-wrap: break-word">${requestedAtFormatted}</td>`);
+      const requestStatus = $(item).find('.request-status');
+      requestStatus.append(requestedAtFormatted);
+      requestStatus.attr('sorttable_customkey', msec);
     });
     sorttable.makeSortable($('#mainTable')[0]);
     $('#originalTable').remove();
