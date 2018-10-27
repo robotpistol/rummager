@@ -53,16 +53,23 @@ class Rummager {
 
     $('.item').each((index, item) => {
       $('#mainTable tbody').append(item);
-      const requestedAt = $(item).attr('data-requested');
-      const date = Rummager.parseDate(requestedAt);
-      const msec = date ? date.valueOf() : '';
-      const requestedAtFormatted = date ? date.toLocaleDateString() : '';
+      const requestedAtData = Rummager.getRequestAtData(item)
       const requestStatus = $(item).find('.request-status');
-      requestStatus.append(requestedAtFormatted);
-      requestStatus.attr('sorttable_customkey', msec);
+      requestStatus.append(requestedAtData.requestedAtFormatted);
+      requestStatus.attr('sorttable_customkey', requestedAtData.msec);
     });
     sorttable.makeSortable($('#mainTable')[0]);
     $('#originalTable').remove();
+  }
+
+  static getRequestAtData(item) {
+    const requestedAt = $(item).attr('data-requested');
+    const date = Rummager.parseDate(requestedAt);
+
+    return {
+      msec: date ? date.valueOf() : '',
+      requestedAtFormatted: date ? date.toLocaleDateString() : '',
+    }
   }
 
   static addCountryCountTab() {
@@ -337,6 +344,28 @@ class Rummager {
     $('#itemFilter').keyup(Rummager.handleFilter);
 
     Rummager.handleFilter();
+  }
+
+  static itemsToJson() {
+    const list = [];
+    $('.item').each((index, item) => {
+      const $row = $(item);
+      const requestedAtData = Rummager.getRequestAtData(item);
+
+      list.push(
+        {
+          name: $row.find('.item-name').text().trim(),
+          notes: $row.find('.notes').text().trim(),
+          price: Rummager.parsePrice($row),
+          country: $row.find('.item-country').text().trim(),
+          signed: $row.find('.request-status .fa').length > 0,
+          signedOn: requestedAtData.requestedAtFormatted,
+          signedOnMsec: requestedAtData.msec,
+          signedBy: $row.find('.request-status .fa').text().trim(),
+        }
+      );
+    });
+    return JSON.stringify(list);
   }
 }
 
