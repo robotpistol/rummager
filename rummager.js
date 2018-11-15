@@ -27,6 +27,18 @@ class Rummager {
     Rummager.addPriceStatsTab();
   }
 
+  static pickRandomRum() {
+    const items = $('.item:visible');
+    const itemCount = items.size();
+    const randomIndex = Math.floor(Math.random() * itemCount);
+    const $row = $(items[randomIndex]);
+    $row.find('.item-name').click();
+    // return {
+    //   name: $row.find('.item-name'),
+    //   price: Rummager.parsePrice($row),
+    // };
+  }
+
   static remakeHomeTab() {
     $('#rummager-tabs').append(`
       <div role="tabpanel" class="tab-pane active" id="home">
@@ -321,6 +333,8 @@ class Rummager {
       .insertAfter($('.item-locator'));
     $('<div><label><input type="checkbox" id="hideSignedRequested" checked="checked">Hide Signed & Requested</label></div>')
       .insertAfter($('.item-locator'));
+    $('<button class="btn btn-primary" id="randrumize" style="margin-top: 5px; margin-bottom: 10px">Randrumize!!!!</button>')
+      .insertAfter($('.item-locator'));
     $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 5px; margin-bottom: 10px">Clear Filters</button>')
       .insertAfter($('.item-locator'));
     $('<div id="itemsFound"><span id="requestedCount">0</span> Requested/Signed Items</div>')
@@ -328,6 +342,7 @@ class Rummager {
     $('<div id="itemsFound"><span id="immortalCount">0</span> Immortal Items</div>')
       .insertAfter($('#itemsFound'));
 
+    $('#randrumize').click(Rummager.pickRandomRum);
     $('#clearFilters').click(Rummager.clearFilters);
     $('#showAvailableOnly').change(Rummager.handleFilter);
     $('#hideSignedRequested').change(Rummager.handleFilter);
