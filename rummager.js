@@ -14,7 +14,8 @@ class Rummager {
         <ul class="nav nav-tabs" role="tablist">
           <li role="presentation" class="active"><a href="#home" aria-controls="profile" role="tab" data-toggle="tab">Home</a></li>
           <li role="presentation"><a href="#country-stats" aria-controls="profile" role="tab" data-toggle="tab">Country Stats</a></li>
-          <li role="presentation"><a href="#price-stats" aria-controls="messages" role="tab" data-toggle="tab">Price Stats</a></li>
+          <li role="presentation"><a href="#price-stats" aria-controls="profile" role="tab" data-toggle="tab">Price Stats</a></li>
+          <li role="presentation"><a href="#independent-bottler" aria-controls="profile" role="tab" data-toggle="tab">Independent Bottlers</a></li>
         </ul>
 
         <!-- Tab panes -->
@@ -25,6 +26,7 @@ class Rummager {
     Rummager.remakeHomeTab();
     Rummager.addCountryCountTab();
     Rummager.addPriceStatsTab();
+    Rummager.addIndependentBottlerTab();
   }
 
   static pickRandomRum() {
@@ -75,6 +77,42 @@ class Rummager {
     });
     sorttable.makeSortable($('#mainTable')[0]);
     $('#originalTable').remove();
+  }
+
+  static addIndependentBottlerTab() {
+    if ($('#independentBottlerCountTable').length === 0) {
+      $('#rummager-tabs').append(`
+        <div role="tabpanel" class="tab-pane" id="independent-bottler">
+          <table id="independentBottlerCountTable" class="table table-condensed sortable"">
+            <thead>
+              <tr>
+                <th style="width: 60px;">Bottler</th>
+                <th class="sorttable_numeric">Total</th>
+                <th class="sorttable_numeric">Signed</th>
+                <th class="sorttable_numeric">Unsigned</th>
+                <th class="sorttable_numeric">Needed</th>
+                <th class="sorttable_numeric">% Signed</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      `);
+
+      $.each(Rummager.generateBottlerStats(), (index, item) => {
+        $('#independentBottlerCountTable tbody').append(`
+          <tr class="bottlerItem" data-requested style="display: table-row;">
+            <td>${item.label}</td>
+            <td>${item.total}</td>
+            <td>${item.signed}</td>
+            <td>${item.unsigned}</td>
+            <td>${item.needed}</td>
+            <td>${item.percentComplete}%</td>
+          </tr>
+        `);
+      });
+
+    }
   }
 
   static addCountryCountTab() {
@@ -128,6 +166,49 @@ class Rummager {
       `);
     });
     sorttable.makeSortable($('#priceStatsTable')[0]);
+  }
+
+  static generateBottlerStats() {
+    const bottlerList = [
+      {label: 'Samaroli', accept: 'samaroli', needed: 22, total: 0, signed: 0, unsigned: 0},
+      {label: 'Cadenhead', accept: 'cadenhead', needed: 16, total: 0, signed: 0, unsigned: 0},
+      {label: 'Blackadder', accept: 'blackadder', needed: 15, total: 0, signed: 0, unsigned: 0},
+      {label: 'Bristol Classic/Spirits', accept: 'bristol', reject: ['^avery'], needed: 17, total: 0, signed: 0, unsigned: 0},
+      {label: 'Duncan Taylor', accept: 'duncan', needed: 8, total: 0, signed: 0, unsigned: 0},
+      {label: 'Hamilton', accept: 'hamilton', needed: 15, total: 0, signed: 0, unsigned: 0},
+      {label: 'Plantation', accept: 'plantation', reject: ['^grove', '^myer'], needed: 16, total: 0, signed: 0, unsigned: 0},
+      {label: 'Velier', accept: 'velier', needed: 42, total: 0, signed: 0, unsigned: 0},
+    ];
+
+
+    $.each(bottlerList, (i, bottler) => {
+      let matchArray;
+      matchArray = [bottler.accept]
+      if (bottler.reject) {
+        matchArray = matchArray.concat(bottler.reject)
+      }
+
+      $('.item').each((index, item) => {
+        const $item = $(item);
+        if ($item.is('.historic-item') && $item.is("[data-requested='']")) {
+          return;
+        }
+        let item_name = $item.find('.item-name').text().toLowerCase().trim();
+        if (Rummager.matchesFilter(matchArray, item_name)) {
+          bottlerList[i].total += 1;
+          if ($item.is("[data-requested!='']")) {
+            bottlerList[i].signed += 1;
+          } else {
+            bottlerList[i].unsigned += 1;
+          }
+        }
+      });
+      bottlerList[i].percentComplete = Math.min(
+        Math.round((bottlerList[i].signed * 100.0) / bottlerList[i].needed),
+        100
+      );
+    });
+    return bottlerList;
   }
 
   static generatePriceCount() {
@@ -249,6 +330,14 @@ class Rummager {
     return date;
   }
 
+  static hideNotes() {
+    if ($('#hideNotes').is(':checked')) {
+      $('.notes').hide();
+    } else {
+      $('.notes').show();
+    }
+  }
+
   static handleFilter() {
     $('.item').hide();
 
@@ -329,6 +418,8 @@ class Rummager {
     $('#showAvailableOnly').remove();
     $('#hideSignedRequested').remove();
 
+    $('<div><label><input type="checkbox" id="hideNotes">Hide Notes</label></div>')
+      .insertAfter($('.item-locator'));
     $('<div><label><input type="checkbox" id="showAvailableOnly" checked="checked">Show Available Only</label></div>')
       .insertAfter($('.item-locator'));
     $('<div><label><input type="checkbox" id="hideSignedRequested" checked="checked">Hide Signed & Requested</label></div>')
@@ -344,6 +435,7 @@ class Rummager {
 
     $('#randrumize').click(Rummager.pickRandomRum);
     $('#clearFilters').click(Rummager.clearFilters);
+    $('#hideNotes').change(Rummager.hideNotes);
     $('#showAvailableOnly').change(Rummager.handleFilter);
     $('#hideSignedRequested').change(Rummager.handleFilter);
     $('#notesFilter').keyup(Rummager.handleFilter);
@@ -354,5 +446,7 @@ class Rummager {
     Rummager.handleFilter();
   }
 }
+
+
 
 Rummager.overlayRummager();
