@@ -83,11 +83,11 @@ class Rummager {
             <thead>
               <tr>
                 <th style="width: 60px;">Bottler</th>
-                <th class="sorttable_numeric">Total</th>
+                <th class="sorttable_numeric">Goal</th>
                 <th class="sorttable_numeric">Signed</th>
                 <th class="sorttable_numeric">Unsigned</th>
-                <th class="sorttable_numeric">Needed</th>
                 <th class="sorttable_numeric">% Signed</th>
+                <th class="sorttable_numeric">Total</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -99,11 +99,11 @@ class Rummager {
         $('#independentBottlerCountTable tbody').append(`
           <tr class="bottlerItem" data-requested style="display: table-row;">
             <td>${item.label}</td>
-            <td>${item.total}</td>
+            <td>${item.needed}</td>
             <td>${item.signed}</td>
             <td>${item.unsigned}</td>
-            <td>${item.needed}</td>
             <td>${item.percentComplete}%</td>
+            <td>${item.total}</td>
           </tr>
         `);
       });
