@@ -166,16 +166,15 @@ class Rummager {
 
   static generateBottlerStats() {
     const bottlerList = [
-      {label: 'Samaroli', accept: 'samaroli', needed: 22, total: 0, signed: 0, unsigned: 0, min_price_needed_to_finish: 0},
-      {label: 'Cadenhead', accept: 'cadenhead', needed: 16, total: 0, signed: 0, unsigned: 0, min_price_needed_to_finish: 0},
-      {label: 'Blackadder', accept: 'blackadder', needed: 15, total: 0, signed: 0, unsigned: 0, min_price_needed_to_finish: 0},
-      {label: 'Bristol Classic/Spirits', accept: 'bristol', reject: ['^avery'], needed: 17, total: 0, signed: 0, unsigned: 0, min_price_needed_to_finish: 0},
-      {label: 'Duncan Taylor', accept: 'duncan', needed: 8, total: 0, signed: 0, unsigned: 0, min_price_needed_to_finish: 0},
-      {label: 'Hamilton', accept: 'hamilton', needed: 15, total: 0, signed: 0, unsigned: 0, min_price_needed_to_finish: 0},
-      {label: 'Plantation', accept: 'plantation', reject: ['^grove', '^myer'], needed: 16, total: 0, signed: 0, unsigned: 0, min_price_needed_to_finish: 0},
-      {label: 'Velier', accept: 'velier', needed: 42, total: 0, signed: 0, unsigned: 0, min_price_needed_to_finish: 0},
+      {label: 'Samaroli', accept: 'samaroli', needed: 22, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
+      {label: 'Cadenhead', accept: 'cadenhead', needed: 16, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
+      {label: 'Blackadder', accept: 'blackadder', needed: 15, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
+      {label: 'Bristol Classic/Spirits', accept: 'bristol', reject: ['^avery'], needed: 17, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
+      {label: 'Duncan Taylor', accept: 'duncan', needed: 8, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
+      {label: 'Hamilton', accept: 'hamilton', needed: 15, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
+      {label: 'Plantation', accept: 'plantation', reject: ['^grove', '^myer'], needed: 16, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
+      {label: 'Velier', accept: 'velier', needed: 42, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
     ];
-
 
     $.each(bottlerList, (i, bottler) => {
       let matchArray;
@@ -192,17 +191,21 @@ class Rummager {
         }
         let item_name = $item.find('.item-name').text().toLowerCase().trim();
         if (Rummager.matchesFilter(matchArray, item_name)) {
+          let price = Rummager.parsePrice(item)
           if ($item.is("[data-requested!='']")) {
             bottler.signed += 1;
           } else {
-            priceList.push(Rummager.parsePrice(item))
+            priceList.push(price)
             bottler.unsigned += 1;
+            bottler.cheapestUnsigned = Math.min(
+              bottler.cheapestUnsigned || price,
+              price
+            )
           }
           bottler.total += 1;
-
         }
       });
-      bottler.min_price_needed_to_finish =
+      bottler.minPriceNeededToFinish =
         priceList.
           sort().
           slice(0, Math.max(bottler.needed - bottler.signed, 0)).
@@ -450,7 +453,5 @@ class Rummager {
     Rummager.handleFilter();
   }
 }
-
-
 
 Rummager.overlayRummager();
