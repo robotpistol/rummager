@@ -166,15 +166,16 @@ class Rummager {
 
   static generateBottlerStats() {
     const bottlerList = [
-      {label: 'Samaroli', accept: 'samaroli', needed: 22, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
-      {label: 'Cadenhead', accept: 'cadenhead', needed: 16, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
-      {label: 'Blackadder', accept: 'blackadder', needed: 15, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
-      {label: 'Bristol Classic/Spirits', accept: 'bristol', reject: ['^avery'], needed: 17, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
-      {label: 'Duncan Taylor', accept: 'duncan', needed: 8, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
-      {label: 'Hamilton', accept: 'hamilton', needed: 15, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
-      {label: 'Plantation', accept: 'plantation', reject: ['^grove', '^myer'], needed: 16, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
-      {label: 'Velier', accept: 'velier', needed: 42, total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null},
-    ];
+      {label: 'Blackadder', accept: 'blackadder', needed: 15},
+      {label: 'Boutique-y', accept: 'boutique', needed: 18},
+      {label: 'Bristol Classic/Spirits', accept: 'bristol', reject: ['^avery'], needed: 17},
+      {label: 'Cadenhead', accept: 'cadenhead', needed: 16},
+      {label: 'Duncan Taylor', accept: 'duncan', needed: 8},
+      {label: 'Hamilton', accept: 'hamilton', needed: 15},
+      {label: 'Plantation', accept: 'plantation', reject: ['^grove', '^myer'], needed: 16},
+      {label: 'Samaroli', accept: 'samaroli', needed: 22},
+      {label: 'Velier', accept: 'velier', needed: 42},
+    ].map(row => Object.assign(row, {total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null}));
 
     $.each(bottlerList, (i, bottler) => {
       let matchArray;
