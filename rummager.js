@@ -1,4 +1,3 @@
-
 class Rummager {
   static matchesFilter(filterTextArray, value) {
     return filterTextArray.reduce((isMatched, filter) => {
@@ -71,6 +70,7 @@ class Rummager {
       requestStatus.append(requestedAtFormatted);
       requestStatus.attr('sorttable_customkey', msec);
     });
+    // eslint-disable-next-line no-undef
     sorttable.makeSortable($('#mainTable')[0]);
     $('#originalTable').remove();
   }
@@ -107,6 +107,7 @@ class Rummager {
           </tr>
         `);
       });
+      // eslint-disable-next-line no-undef
       sorttable.makeSortable($('#independentBottlerCountTable')[0]);
     }
   }
@@ -161,62 +162,78 @@ class Rummager {
         </tr>
       `);
     });
+    // eslint-disable-next-line no-undef
     sorttable.makeSortable($('#priceStatsTable')[0]);
   }
 
   static generateBottlerStats() {
-    const bottlerList = [
-      {label: 'Blackadder', accept: 'blackadder', needed: 15},
-      {label: 'Boutique-y', accept: 'boutique', needed: 18},
-      {label: 'Bristol Classic/Spirits', accept: 'bristol', reject: ['^avery'], needed: 17},
-      {label: 'Cadenhead', accept: 'cadenhead', needed: 16},
-      {label: 'Duncan Taylor', accept: 'duncan', needed: 8},
-      {label: 'Hamilton', accept: 'hamilton', needed: 15},
-      {label: 'Plantation', accept: 'plantation', reject: ['^grove', '^myer'], needed: 16},
-      {label: 'Samaroli', accept: 'samaroli', needed: 22},
-      {label: 'Velier', accept: 'velier', needed: 42},
-    ].map(row => Object.assign(row, {total: 0, signed: 0, unsigned: 0, minPriceNeededToFinish: 0, cheapestUnsigned: null}));
+    return [
+      { label: 'Blackadder', accept: 'blackadder', needed: 15 },
+      { label: 'Boutique-y', accept: 'boutique', needed: 18 },
+      {
+        label: 'Bristol Classic/Spirits',
+        accept: 'bristol',
+        reject: ['^avery'],
+        needed: 17,
+      },
+      { label: 'Cadenhead', accept: 'cadenhead', needed: 16 },
+      { label: 'Duncan Taylor', accept: 'duncan', needed: 8 },
+      { label: 'Hamilton', accept: 'hamilton', needed: 15 },
+      {
+        label: 'Plantation',
+        accept: 'plantation',
+        reject: ['^grove', '^myer'],
+        needed: 16,
+      },
+      { label: 'Samaroli', accept: 'samaroli', needed: 22 },
+      { label: 'Velier', accept: 'velier', needed: 42 },
+    ].map((bottlerRow) => {
+      const bottler = $.extend({
+        total: 0,
+        signed: 0,
+        unsigned: 0,
+        minPriceNeededToFinish: 0,
+        cheapestUnsigned: null,
+      }, bottlerRow);
 
-    $.each(bottlerList, (i, bottler) => {
       let matchArray;
-      matchArray = [bottler.accept]
+      matchArray = [bottler.accept];
       if (bottler.reject) {
-        matchArray = matchArray.concat(bottler.reject)
+        matchArray = matchArray.concat(bottler.reject);
       }
 
-      let priceList = [];
+      const priceList = [];
       $('.item').each((index, item) => {
         const $item = $(item);
         if ($item.is('.historic-item') && $item.is("[data-requested='']")) {
           return;
         }
-        let item_name = $item.find('.item-name').text().toLowerCase().trim();
-        if (Rummager.matchesFilter(matchArray, item_name)) {
-          let price = Rummager.parsePrice(item)
+        const itemName = $item.find('.item-name').text().toLowerCase().trim();
+        if (Rummager.matchesFilter(matchArray, itemName)) {
+          const price = Rummager.parsePrice(item);
           if ($item.is("[data-requested!='']")) {
             bottler.signed += 1;
           } else {
-            priceList.push(price)
+            priceList.push(price);
             bottler.unsigned += 1;
             bottler.cheapestUnsigned = Math.min(
               bottler.cheapestUnsigned || price,
-              price
-            )
+              price,
+            );
           }
           bottler.total += 1;
         }
       });
-      bottler.minPriceNeededToFinish =
-        priceList.
-          sort().
-          slice(0, Math.max(bottler.needed - bottler.signed, 0)).
-          reduce((a,b) => a + b, 0)
+      bottler.minPriceNeededToFinish = priceList
+        .sort()
+        .slice(0, Math.max(bottler.needed - bottler.signed, 0))
+        .reduce((a, b) => a + b, 0);
       bottler.percentComplete = Math.min(
         Math.round((bottler.signed * 100.0) / bottler.needed),
-        100
+        100,
       );
+      return bottler;
     });
-    return bottlerList;
   }
 
   static generatePriceCount() {
@@ -309,6 +326,7 @@ class Rummager {
         </tr>
       `);
     });
+    // eslint-disable-next-line no-undef
     sorttable.makeSortable($('#countryCountTable')[0]);
   }
 
@@ -374,11 +392,10 @@ class Rummager {
         price: Rummager.parsePrice($row),
         country: $row.find('.item-country').text().toLowerCase(),
       };
-      const rowMatched =
-        Rummager.matchesFilter(itemFilterTextArray, item.name) &&
-        Rummager.matchesFilter(notesFilterTextArray, item.notes) &&
-        Rummager.matchesFilter(countryFilterTextArray, item.country) &&
-        (priceFilter === '' || item.price <= priceFilter);
+      const rowMatched = Rummager.matchesFilter(itemFilterTextArray, item.name)
+        && Rummager.matchesFilter(notesFilterTextArray, item.notes)
+        && Rummager.matchesFilter(countryFilterTextArray, item.country)
+        && (priceFilter === '' || item.price <= priceFilter);
 
       if (rowMatched) {
         $row.show();
