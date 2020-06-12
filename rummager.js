@@ -405,10 +405,14 @@ class Rummager {
     });
 
     const $visibleRows = $('.item:visible');
-
     $('#count').html($visibleRows.length);
-    $('#requestedCount').html($visibleRows.filter((i, e) => $(e).is("[data-requested!='']")).length);
     $('#immortalCount').html($visibleRows.find('.immortal-item').length);
+
+    const requestedSignedCount = $('.item:visible[data-requested!=""]').length;
+    const signedCount = $('.item:visible .request-status :first-child.text-success').length;
+    $('#requestedCount').html(requestedSignedCount - signedCount);
+    $('#signedCount').html(signedCount);
+    $('#requestedSignedCount').html(requestedSignedCount);
   }
 
   static deleteUnwrappedText(node) {
@@ -453,7 +457,11 @@ class Rummager {
       .insertAfter($('.item-locator'));
     $('<button class="btn btn-primary" id="clearFilters" style="margin-top: 5px; margin-bottom: 10px">Clear Filters</button>')
       .insertAfter($('.item-locator'));
-    $('<div id="itemsFound"><span id="requestedCount">0</span> Requested/Signed Items</div>')
+    $('<div id="itemsFound"><span id="requestedCount">0</span> Requested Items</div>')
+      .insertAfter($('#itemsFound'));
+    $('<div id="itemsFound"><span id="signedCount">0</span> Signed Items</div>')
+      .insertAfter($('#itemsFound'));
+    $('<div id="itemsFound"><span id="requestedSignedCount">0</span> Requested/Signed Items</div>')
       .insertAfter($('#itemsFound'));
     $('<div id="itemsFound"><span id="immortalCount">0</span> Immortal Items</div>')
       .insertAfter($('#itemsFound'));
