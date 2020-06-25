@@ -176,7 +176,7 @@ class Rummager {
         reject: ['^avery'],
         needed: 17,
       },
-      { label: 'Cadenhead', accept: 'cadenhead', needed: 16 },
+      { label: 'Cadenhead', accept: 'cadenhead', needed: 14 },
       { label: 'Duncan Taylor', accept: 'duncan', needed: 8 },
       { label: 'Hamilton', accept: 'hamilton', needed: 15 },
       {
